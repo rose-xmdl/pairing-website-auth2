@@ -2,201 +2,404 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <link rel="icon" type="image/png" sizes="32x32" href="https://files.catbox.moe/0oko4o.jpg">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>pairing code</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <title>ELITEPROTECH PAIR CODE</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
+    :root {
+      --primary: #6c5ce7;
+      --secondary: #a29bfe;
+      --accent: #fd79a8;
+      --dark: #2d3436;
+      --light: #f5f6fa;
+      --success: #00b894;
+      --warning: #fdcb6e;
+      --error: #d63031;
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
     body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #2c3e50, #1e272e);
+      color: var(--light);
+      min-height: 100vh;
       display: flex;
+      flex-direction: column;
       justify-content: center;
       align-items: center;
-      height: 100vh;
-      margin: 0;
-      background-image: url("https://i.ibb.co/F67wGFG/4c6f5eff15441cf3669e2feedc7228a8.jpg"); /* Set the background image */
-      background-repeat: no-repeat;
-      background-position: center;
-      background-size: cover;
-      font-family: Arial, sans-serif;
+      position: relative;
+      overflow-x: hidden;
     }
-
-    .container {
+    
+    /* Animated background */
+    .bg-particles {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      overflow: hidden;
+    }
+    
+    .particle {
+      position: absolute;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 50%;
+      animation: float 15s infinite linear;
+    }
+    
+    @keyframes float {
+      0% {
+        transform: translateY(0) rotate(0deg);
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(-1000px) rotate(720deg);
+        opacity: 0;
+      }
+    }
+    
+    /* Main container */
+    .main-container {
+      width: 100%;
+      max-width: 420px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+    
+    /* Card design */
+    .card {
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-radius: 16px;
+      padding: 30px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      transition: all 0.3s ease;
+    }
+    
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+    }
+    
+    .card-header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    
+    .card-header h1 {
+      font-size: 24px;
+      font-weight: 600;
+      margin-bottom: 5px;
+      background: linear-gradient(90deg, var(--primary), var(--accent));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    
+    .card-header p {
+      font-size: 14px;
+      color: rgba(255, 255, 255, 0.7);
+    }
+    
+    /* Input field */
+    .input-group {
+      position: relative;
+      margin-bottom: 25px;
+    }
+    
+    .input-group label {
+      position: absolute;
+      top: -10px;
+      left: 15px;
+      background: linear-gradient(135deg, #2c3e50, #1e272e);
+      padding: 0 8px;
+      font-size: 12px;
+      color: var(--secondary);
+      z-index: 1;
+    }
+    
+    .input-group input {
+      width: 100%;
+      padding: 15px 20px;
+      border: 2px solid rgba(255, 255, 255, 0.1);
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 10px;
+      font-size: 16px;
+      color: white;
+      transition: all 0.3s ease;
+    }
+    
+    .input-group input:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(108, 92, 231, 0.2);
+    }
+    
+    /* Button */
+    .btn {
+      width: 100%;
+      padding: 15px;
+      border: none;
+      border-radius: 10px;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      color: white;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+    
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(108, 92, 231, 0.4);
+    }
+    
+    .btn:active {
+      transform: translateY(0);
+    }
+    
+    /* Result section */
+    .result-container {
+      margin-top: 25px;
+      text-align: center;
+      min-height: 60px;
       display: flex;
       flex-direction: column;
       align-items: center;
+      justify-content: center;
     }
-
-    .box {
-      width: 300px;
-      height: 330px;
-      padding: 20px;
+    
+    .result-text {
+      font-size: 16px;
+      font-weight: 500;
+    }
+    
+    .code-display {
+      background: rgba(0, 0, 0, 0.3);
+      padding: 12px 20px;
+      border-radius: 8px;
+      margin-top: 15px;
+      display: inline-block;
+      cursor: pointer;
+      transition: all 0.3s ease;
       position: relative;
+      overflow: hidden;
+    }
+    
+    .code-display:hover {
+      background: rgba(0, 0, 0, 0.4);
+    }
+    
+    .code-display::after {
+      content: 'Click to copy';
+      position: absolute;
+      bottom: -20px;
+      left: 0;
+      width: 100%;
       text-align: center;
-      background-color: rgba(255,255,255,0.5);
-      border-radius: 10px;
-      transform: perspective(1000px) rotateY(0deg);
-      box-shadow: 0 0 20px rgba(0, 0, 0, 0.7);
-      position: relative;
+      font-size: 10px;
+      opacity: 0;
+      transition: all 0.3s ease;
     }
-
-    #text {
-  color: #000; /* Set the text color to black (#000) */
-}
-
-.input-container input {
-  color: #000; /* Set the text color to black (#000) */
-}
-
-.centered-text {
-  color: #000; /* Set the text color to black (#000) */
-}
-
-  
-    .input-container {
-      display: flex;
-      background: white;
-      border-radius: 1rem;
-      background: linear-gradient(45deg, #c5c5c5 0%, #ffffff 100%);
-      box-shadow: 20px 20px 20px #d8d8d8, -10px -10px 20px #f8f8f8;
-      padding: 0.3rem;
-      gap: 0.3rem;
-      max-width: 300px; /* Set your desired maximum width */
-      width: 100%;
+    
+    .code-display:hover::after {
+      bottom: -25px;
+      opacity: 0.7;
     }
-
-    .input-container input {
-      border-radius: 0.8rem 0 0 0.8rem;
-      background: #e8e8e8;
-      box-shadow: inset 13px 13px 10px #dcdcdc, inset -13px -13px 10px #f4f4f4;
-      width: 89%;
-      flex-basis: 75%;
-      padding: 1rem;
-      border: none;
-      border-left: 2px solid #ff9d9d;
-      color: #5e5e5e;
-      transition: all 0.2s ease-in-out;
+    
+    /* Footer */
+    .footer {
+      margin-top: 30px;
+      text-align: center;
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.5);
     }
-
-    .input-container input:focus {
-      border-left: 2px solid #ff9d9d;
-      outline: none;
-      box-shadow: inset 13px 13px 10px #ffe1e1, inset -13px -13px 10px #f4f4f4;
+    
+    .footer-brand {
+      color: var(--secondary);
+      font-weight: 600;
     }
-
-    .input-container button {
-      flex-basis: 25%;
-      padding: 1rem;
-      background: linear-gradient(135deg, #ffe1e1 0%, #ff9d9d 100%);
-      font-weight: 900;
-      letter-spacing: 0.3rem;
-      text-transform: uppercase;
-      color: white;
-      border: none;
-      width: 100%;
-      border-radius: 0 1rem 1rem 0;
-      transition: all 0.2s ease-in-out;
+    
+    /* Status indicators */
+    .status-error {
+      color: var(--error);
     }
-
-    .input-container button:hover {
-      background: linear-gradient(135deg, #A8E4A0 0%, #32CD32 100%);
+    
+    .status-success {
+      color: var(--success);
     }
-
-    @media (max-width: 500px) {
-      .input-container {
-        flex-direction: column;
+    
+    /* Responsive adjustments */
+    @media (max-width: 480px) {
+      .main-container {
+        padding: 0 15px;
+        margin-top: 20px;
       }
-
-      .input-container input {
-        border-radius: 0.8rem;
+      
+      .card {
+        padding: 25px 20px;
       }
-
-      .input-container button {
-        padding: 1rem;
-        border-radius: 0.8rem;
+      
+      .card-header h1 {
+        font-size: 22px;
       }
     }
-
-    .centered-text {
-    text-align: center;
-}
   </style>
 </head>
 <body>
-  <div class="container">
-    <div class="main">
-      <div class="box" id="box">
-        <div id="text">
-          <i class="fa fa-user"></i>
-          <p>
-            <h3 class="centered-text">Link with phone number</h3>
-            <br>
-            <h6>Enter your number with country code.</h6>
-            <div class="input-container">
-                <input placeholder="+2348109263390" type="number" id="number" placeholder="enter your phone number with country code" name="">
-                <button id="submit">enter</button>
-              </div>
-             
-              <a id="waiting-message" class="centered-text" style="display: none;">in process...</a>
-              <br>
-              <br>
-              <main id="pair"></main>
-          </p>
-        </div>
+  <!-- Animated background particles -->
+  <div class="bg-particles" id="particles"></div>
+  
+  <!-- Main content -->
+  <div class="main-container">
+    <div class="card">
+      <div class="card-header">
+        <h1>ELITEPROTECH PAIR</h1>
+        <p>Enter your phone number with country code to generate pairing code</p>
+      </div>
+      
+      <div class="input-group">
+        <label for="number">Phone Number</label>
+        <input type="number" id="number" placeholder="e.g. 23481092*****" autocomplete="off" inputmode="numeric">
+      </div>
+      
+      <button class="btn" id="submit">
+        <i class="fas fa-key"></i> GET CODE
+      </button>
+      
+      <div class="result-container" id="pair">
+        <p class="result-text">Enter your number with country code</p>
       </div>
     </div>
+    
+    <div class="footer">
+      <p>This tool is provided for educational purposes only</p>
+      <p class="footer-brand">POWERED BY ELITEPROTECH</p>
+    </div>
   </div>
-  <script
-  src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.0.0-alpha.1/axios.min.js"
-></script>
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.0.0-alpha.1/axios.min.js"></script>
   <script>
-    let a = document.getElementById("pair");
-    let b = document.getElementById("submit");
-    let c = document.getElementById("number");
-    let box = document.getElementById("box");
-
-    async function Copy() {
-      let text = document.getElementById("copy").innerText;
-      let obj = document.getElementById("copy");
-      await navigator.clipboard.writeText(obj.innerText.replace('CODE: ', ''));
-      obj.innerText = "COPIED";
-      obj.style = "color:blue;font-weight:bold";
-      obj.size = "5";
-      setTimeout(() => {
-        obj.innerText = text;
-        obj.style = "color:black;font-weight-bold";
-        obj.size = "5";
-      }, 500);
+    // Create background particles
+    function createParticles() {
+      const particlesContainer = document.getElementById('particles');
+      const particleCount = 30;
+      
+      for (let i = 0; i < particleCount; i++) {
+        const particle = document.createElement('div');
+        particle.classList.add('particle');
+        
+        // Random properties
+        const size = Math.random() * 10 + 5;
+        const posX = Math.random() * 100;
+        const delay = Math.random() * 15;
+        const duration = Math.random() * 10 + 10;
+        
+        particle.style.width = `${size}px`;
+        particle.style.height = `${size}px`;
+        particle.style.left = `${posX}%`;
+        particle.style.animationDelay = `${delay}s`;
+        particle.style.animationDuration = `${duration}s`;
+        
+        particlesContainer.appendChild(particle);
+      }
     }
-
-    b.addEventListener("click", async (e) => {
-      e.preventDefault();
-      if (!c.value) {
-        a.innerHTML = '<a style="color:black;font-weight:bold">Enter your whatsapp number with country code.</a><br><br>';
-      } else if (c.value.replace(/[^0-9]/g, "").length < 11) {
-        a.innerHTML = '<a style="color:black;font-weight:bold">Invalid number format</a><br><br>';
-      } else {
-        const bc = c.value.replace(/[^0-9]/g, "");
-        let bb = "";
-        let bbc = "";
-        const cc = bc.split('');
-        cc.map(a => {
-          bbc += a;
-          if (bbc.length == 3) {
-            bb += " " + a;
-          } else if (bbc.length == 8) {
-            bb += " " + a;
-          } else {
-            bb += a;
+    
+    // Initialize
+    document.addEventListener('DOMContentLoaded', () => {
+      createParticles();
+      
+      const submitBtn = document.getElementById('submit');
+      const numberInput = document.getElementById('number');
+      const resultContainer = document.getElementById('pair');
+      
+      submitBtn.addEventListener('click', async (e) => {
+        e.preventDefault();
+        
+        const number = numberInput.value.trim();
+        const cleanNumber = number.replace(/[^0-9]/g, "");
+        
+        if (!number) {
+          showResult('Please enter your number', 'error');
+          return;
+        }
+        
+        if (cleanNumber.length < 11) {
+          showResult('Invalid number format', 'error');
+          return;
+        }
+        
+        showResult('<i class="fas fa-spinner fa-pulse"></i> Processing request...', 'loading');
+        
+        try {
+          const { data } = await axios.get(`/code?number=${cleanNumber}`);
+          const code = data.code || "Service unavailable";
+          
+          const codeHtml = `
+            <div class="code-display" id="copy" onclick="copyToClipboard()">
+              <i class="fas fa-lock"></i> CODE: <strong>${code}</strong>
+            </div>
+          `;
+          
+          showResult(codeHtml, 'success');
+        } catch (error) {
+          showResult('Failed to generate code. Please try again.', 'error');
+        }
+      });
+      
+      function showResult(message, type = 'info') {
+        resultContainer.innerHTML = '';
+        
+        if (typeof message === 'string') {
+          const p = document.createElement('p');
+          p.className = 'result-text';
+          p.innerHTML = message;
+          
+          if (type === 'error') {
+            p.classList.add('status-error');
+          } else if (type === 'success') {
+            p.classList.add('status-success');
           }
-        });
-        c.type = "text";
-        c.value = "+" + bb;
-        c.style = "color:black;font-size:20px";
-        a.innerHTML = '<a style="color:black;font-weight:bold">Please wait for some time</a><br><br>';
-        let { data } = await axios(`/code?number=${bc}`);
-        let code = data.code || "Service Unavailable";
-        a.innerHTML = '<font id="copy" onclick="Copy()" style="color:red;font-weight:bold" size="5">CODE: <span style="color:black;font-weight:bold">' + code + '</span></font><br><br><br>';
+          
+          resultContainer.appendChild(p);
+        } else {
+          resultContainer.innerHTML = message;
+        }
       }
     });
+    
+    function copyToClipboard() {
+      const codeElement = document.getElementById('copy');
+      const code = codeElement.innerText.replace('CODE: ', '').trim();
+      
+      navigator.clipboard.writeText(code).then(() => {
+        const originalText = codeElement.innerHTML;
+        codeElement.innerHTML = '<i class="fas fa-check"></i> Copied!';
+        codeElement.style.color = 'var(--success)';
+        
+        setTimeout(() => {
+          codeElement.innerHTML = originalText;
+          codeElement.style.color = '';
+        }, 2000);
+      }).catch(err => {
+        console.error('Failed to copy: ', err);
+      });
+    }
   </script>
 </body>
 </html>

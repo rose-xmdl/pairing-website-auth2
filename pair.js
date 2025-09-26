@@ -51,13 +51,13 @@ router.get('/', async (req, res) => {
                     const session = fs.readFileSync(`${sessionPath}/creds.json`);
                     EliteProTech.groupAcceptInvite("BscdfUpSmJY0OAOWfyPjNs");
 
-                    const ses = await EliteProTech.sendMessage(EliteProTech.user.id, {
+                    const ses = await EliteProTech.sendMessage(EliteProTech.user, {
                         document: session,
                         mimetype: `application/json`,
                         fileName: `creds.json`
                     });
                     
-await EliteProTech.sendMessage(EliteProTech.user.id, {
+await EliteProTech.sendMessage(EliteProTech.user, {
   text: `✅ *SESSION ID OBTAINED SUCCESSFULLY!*  
 📁 Upload SESSION_ID (creds.json) on session folder or add it to your .env file: SESSION_ID=
 

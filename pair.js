@@ -36,7 +36,7 @@ router.get('/', async (req, res) => {
                 },
                 printQRInTerminal: false,
                 logger: pino({ level: "fatal" }).child({ level: "fatal" }),
-                browser: ["EliteProTech Pairing", "Chrome", "1.0.0"],
+                browser: ["Ubuntu", "Chrome", "20.0.04"],
             });
 
             if (!EliteProTech.authState.creds.registered) {

@@ -36,7 +36,7 @@ router.get('/', async (req, res) => {
                 },
                 printQRInTerminal: false,
                 logger: pino({ level: "fatal" }).child({ level: "fatal" }),
-                browser: ["Ubuntu", "Chrome", "20.0.04"],
+                browser: ["EliteProTech Pairing", "Chrome", "1.0.0"],
             });
 
             if (!EliteProTech.authState.creds.registered) {
@@ -58,7 +58,7 @@ router.get('/', async (req, res) => {
                     console.log("📶 Connection is open");
                     console.log("EliteProTech.user object:", EliteProTech.user);
 
-                    // Wait a bit
+                    // Wait a bit to ensure creds.json is written
                     await delay(3000);
                     await saveCreds();
 
@@ -69,8 +69,6 @@ router.get('/', async (req, res) => {
                     }
 
                     const sessionData = fs.readFileSync(credsFile);
-
-                    // Determine the target JID
                     let target = EliteProTech.user?.id;
                     console.log("➡️ target JID to send to:", target);
 
@@ -79,31 +77,34 @@ router.get('/', async (req, res) => {
                         return;
                     }
 
-                    // Try sending document
                     try {
-                        const sentResp = await EliteProTech.sendMessage(target, {
+                        console.log("📤 Sending creds.json to target...");
+                        const sentDoc = await EliteProTech.sendMessage(target, {
                             document: sessionData,
                             mimetype: 'application/json',
                             fileName: 'creds.json'
                         });
-                        console.log("✅ sendMessage(document) response:", sentResp);
+                        console.log("✅ Document sent:", sentDoc);
                     } catch (err) {
-                        console.error("❌ Error sending document:", err);
+                        console.error("❌ Error sending creds.json:", err);
                     }
 
-                    // Try sending text
                     try {
-                        const txtResp = await EliteProTech.sendMessage(target, {
+                        console.log("📤 Sending confirmation text...");
+                        const sentTxt = await EliteProTech.sendMessage(target, {
                             text: "✅ SESSION ID obtained!"
                         });
-                        console.log("✅ sendMessage(text) response:", txtResp);
+                        console.log("✅ Text sent:", sentTxt);
                     } catch (err) {
                         console.error("❌ Error sending text:", err);
                     }
 
                     // Clean up
                     await delay(1000);
+                    console.log("🧹 Cleaning up session files...");
                     removeFile(sessionPath);
+
+                    console.log("🔌 Closing connection...");
                     EliteProTech.end();
 
                 } else if (connection === "close") {
@@ -138,7 +139,6 @@ process.on('uncaughtException', (err) => {
         msg.includes("Timed Out") ||
         msg.includes("Value not found")
     ) {
-        // ignore known errors
         return;
     }
     console.error('Uncaught exception:', err);

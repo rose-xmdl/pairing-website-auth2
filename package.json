@@ -9,7 +9,7 @@
     "start": "node pair.js"
   },
   "dependencies": {
-    "baileys": "^7.0.0-rc.4",
+    "baileys": "^6.7.20",
     "qrcode": "^1.5.3",
     "awesome-phonenumber": "^2.64.0",
     "pino": "^8.1.0",

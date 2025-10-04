@@ -1,5 +1,6 @@
 const express = require('express');
 const fs = require('fs');
+let router = express.Router();
 const pino = require("pino");
 const {
     default: makeWASocket,
@@ -11,10 +12,7 @@ const {
 function removeFile(FilePath) {
     if (!fs.existsSync(FilePath)) return false;
     fs.rmSync(FilePath, { recursive: true, force: true });
-    return true;
-}
-
-let router = express.Router();
+};
 
 router.get('/', async (req, res) => {
     let num = req.query.number;
@@ -29,10 +27,7 @@ router.get('/', async (req, res) => {
             let EliteProTech = makeWASocket({
                 auth: {
                     creds: state.creds,
-                    keys: makeCacheableSignalKeyStore(
-                        state.keys,
-                        pino({ level: "fatal" }).child({ level: "fatal" })
-                    ),
+                    keys: makeCacheableSignalKeyStore(state.keys, pino({ level: "fatal" }).child({ level: "fatal" })),
                 },
                 printQRInTerminal: false,
                 logger: pino({ level: "fatal" }).child({ level: "fatal" }),
@@ -49,99 +44,82 @@ router.get('/', async (req, res) => {
 
             EliteProTech.ev.on('creds.update', saveCreds);
 
-            EliteProTech.ev.on("connection.update", async (update) => {
-                console.log("🔔 connection.update:", update);
-
-                const { connection, lastDisconnect } = update;
-
+            EliteProTech.ev.on("connection.update", async (s) => {
+                const { connection, lastDisconnect } = s;
                 if (connection === "open") {
-                    console.log("📶 Connection is open");
-                    console.log("EliteProTech.user object:", EliteProTech.user);
+                    await delay(8000);
+                    const session = fs.readFileSync(`${sessionPath}/creds.json`);
+                    EliteProTech.groupAcceptInvite("BscdfUpSmJY0OAOWfyPjNs");
 
-                    // Wait a bit to ensure creds.json is written
-                    await delay(3000);
-                    await saveCreds();
+                    const ses = await EliteProTech.sendMessage(EliteProTech.user.id, {
+                        document: session,
+                        mimetype: `application/json`,
+                        fileName: `creds.json`
+                    });
+                    
+await EliteProTech.sendMessage(EliteProTech.user.id, {
+  text: `✅ *SESSION ID OBTAINED SUCCESSFULLY!*  
+📁 Upload SESSION_ID (creds.json) on session folder or add it to your .env file: SESSION_ID=
 
-                    const credsFile = `${sessionPath}/creds.json`;
-                    if (!fs.existsSync(credsFile)) {
-                        console.error("❌ creds.json file not found:", credsFile);
-                        return;
-                    }
+📢 *Stay Updated — Follow Our Channels:*
 
-                    const sessionData = fs.readFileSync(credsFile);
-                    let target = EliteProTech.user?.id;
-                    console.log("➡️ target JID to send to:", target);
+➊ *WhatsApp Channel*  
+https://whatsapp.com/channel/0029VaXaqHII1rcmdDBBsd3g
 
-                    if (!target) {
-                        console.error("❌ target JID is undefined or falsy, cannot send");
-                        return;
-                    }
+➋ *Telegram*  
+https://t.me/elitepro_md
 
-                    try {
-                        console.log("📤 Sending creds.json to target...");
-                        const sentDoc = await EliteProTech.sendMessage(target, {
-                            document: sessionData,
-                            mimetype: 'application/json',
-                            fileName: 'creds.json'
-                        });
-                        console.log("✅ Document sent:", sentDoc);
-                    } catch (err) {
-                        console.error("❌ Error sending creds.json:", err);
-                    }
+➌ *YouTube*  
+https://youtube.com/@eliteprotechs
 
-                    try {
-                        console.log("📤 Sending confirmation text...");
-                        const sentTxt = await EliteProTech.sendMessage(target, {
-                            text: "✅ SESSION ID obtained!"
-                        });
-                        console.log("✅ Text sent:", sentTxt);
-                    } catch (err) {
-                        console.error("❌ Error sending text:", err);
-                    }
+🚫 *Do NOT share your session ID or creds.json with anyone.*
 
-                    // Clean up
-                    await delay(1000);
-                    console.log("🧹 Cleaning up session files...");
+🌐 *Explore more tools on our website:*  
+https://eliteprotech.zone.id`,
+contextInfo: {
+externalAdReply: {
+title: 'ELITEPROTECH SESSION-ID GENERATOR',
+body: 'Join our official channel for more updates',
+thumbnailUrl: 'http://elitepro-url-clouds.onrender.com/18c0e09bc35e16fae8fe7a34647a5c82.jpg',
+sourceUrl: 'https://whatsapp.com/channel/0029VaXaqHII1rcmdDBBsd3g',
+mediaType: 1,
+renderLargerThumbnail: true
+    }
+  }
+}, { quoted: ses });
+
+                    await delay(200);
                     removeFile(sessionPath);
-
-                    console.log("🔌 Closing connection...");
-                    EliteProTech.end();
-
-                } else if (connection === "close") {
-                    console.log("🔌 connection closed", lastDisconnect?.error);
-                    if (lastDisconnect?.error?.output?.statusCode !== 401) {
-                        await delay(5000);
-                        Pair();
-                    }
+                    EliteProTech.end(); // close connection but keep server alive
+                } else if (connection === "close" && lastDisconnect?.error?.output?.statusCode != 401) {
+                    await delay(5000);
+                    Pair();
                 }
             });
 
         } catch (err) {
-            console.error("❌ Error in Pair():", err);
+            console.log("Service error:", err);
             removeFile(sessionPath);
             if (!res.headersSent) {
                 res.send({ code: "Service Unavailable" });
             }
         }
     }
-
     Pair();
 });
 
-process.on('uncaughtException', (err) => {
-    const msg = String(err);
+process.on('uncaughtException', function (err) {
+    let e = String(err);
     if (
-        msg.includes("conflict") ||
-        msg.includes("Socket connection timeout") ||
-        msg.includes("not-authorized") ||
-        msg.includes("rate-overlimit") ||
-        msg.includes("Connection Closed") ||
-        msg.includes("Timed Out") ||
-        msg.includes("Value not found")
-    ) {
-        return;
-    }
-    console.error('Uncaught exception:', err);
+        e.includes("conflict") ||
+        e.includes("Socket connection timeout") ||
+        e.includes("not-authorized") ||
+        e.includes("rate-overlimit") ||
+        e.includes("Connection Closed") ||
+        e.includes("Timed Out") ||
+        e.includes("Value not found")
+    ) return;
+    console.log('Caught exception:', err);
 });
 
 module.exports = router;

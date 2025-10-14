@@ -6,8 +6,11 @@ const {
     default: makeWASocket,
     useMultiFileAuthState,
     delay,
-    makeCacheableSignalKeyStore
+    makeCacheableSignalKeyStore,
+    fetchLatestBaileysVersion
 } = require("baileys");
+
+let { version, isLatest } = await fetchLatestBaileysVersion()
 
 function removeFile(FilePath) {
     if (!fs.existsSync(FilePath)) return false;
